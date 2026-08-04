@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HKRN Portal Form - Tab Wise View</title>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* ---------------- GENERAL STYLES ---------------- */
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #f4f6f9;
+        }
+
+        /* ---------------- LOGIN PAGE STYLES ---------------- */
+        #login-page {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0088cc, #1a237e);
+            padding-top: 50px;
+        }
+
+        .login-info-box {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 480px;
+            text-align: left;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+        }
+
+        .login-info-box p {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .login-info-box .highlight {
+            font-weight: bold;
+            color: #000;
+        }
+
+        .login-info-box .step-title {
+            color: #ff9800;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+
+        .login-info-box .step-details {
+            color: #4caf50;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .login-info-box .select-menu {
+            color: #d32f2f;
+            font-size: 14px;
+        }
+
+        .login-card {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            width: 90%;
+            max-width: 480px;
+            text-align: center;
+            position: relative;
+        }
+
+        .login-card-logo-container {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffffff;
+            padding: 0 10px;
+        }
+
+        .login-card-logo {
+            background: #b71c1c;
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 28px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .login-card h2 {
+            margin-top: 40px;
+            margin-bottom: 25px;
+            color: #333;
+            font-size: 20px;
+            font-weight: normal;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #999;
+            border-radius: 5px;
+            font-size: 14px;
+            outline: none;
+            color: #333;
+        }
+
+        .input-group input:focus {
+            border-color: #0088cc;
+        }
+
+        .login-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 25px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            gap: 8px;
+        }
+
+        .footer-link {
+            text-decoration: none;
+            font-size: 13px;
+            color: #b71c1c;
+        }
+
+        .login-btn {
+            padding: 12px 30px;
+            background-color: #4caf50;
+            border: none;
+            color: #fff;
+            font-size: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .error-msg {
+            color: #d9534f;
+            font-size: 13px;
+            margin-bottom: 12px;
+            display: none;
+            font-weight: bold;
+        }
+
+        /* ---------------- MAIN FORM CONTENT STYLES ---------------- */
+        #main-content {
+            display: none;
+            padding: 20px;
+        }
+
+        .header-bar {
+            max-width: 1100px;
+            margin: 0 auto 15px auto;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .logout-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 5px;
+        }
+
+        /* Wizard / Step Progress Bar */
+        .wizard {
+            display: flex;
+            margin-bottom: 25px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .step {
+            flex: 1;
+            padding: 12px 10px;
+            text-align: center;
+            position: relative;
+            background-color: #cde4f7;
+            color: #333;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            clip-path: polygon(0% 0%, 90% 0%, 100% 50%, 90% 100%, 0% 100%, 10% 50%);
+            margin-right: -12px;
+            user-select: none;
+        }
+
+        .step:first-child {
+            clip-path: polygon(0% 0%, 90% 0%, 100% 50%, 90% 100%, 0% 100%);
+        }
+
+        .step.active {
+            background-color: #2b589a;
+            color: white;
+            z-index: 2;
+        }
+
+        .step span {
+            display: block;
+            font-size: 11px;
+            font-weight: normal;
+        }
+
+        /* Tab Content Control */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active-tab {
+            display: block;
+        }
+
+        /* Section Header Bar */
+        .section-header {
+            background-color: #0088cc;
+            color: white;
+            padding: 8px 12px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            border-radius: 3px;
+        }
+
+        /* Form Grid Styles */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .form-group input, .form-group select {
+            padding: 8px;
+            font-size: 13px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            outline: none;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+            font-size: 12px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+            font-weight: bold;
+        }
+
+        td {
+            background-color: #ffffff;
+        }
+
+        .icon-btn {
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 14px;
+        }
+
+        .icon-view { color: #0088cc; }
+        .icon-delete { color: #d9534f; }
+
+        .btn-add {
+            background-color: #0088cc;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            align-self: flex-end;
+        }
+
+        .btn-next {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+
+        /* ---------------- MODAL STYLES ---------------- */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0; top: 0; 
+            width: 100%; height: 100%; 
+            background-color: rgba(0,0,0,0.7); 
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto; 
+            padding: 20px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .modal-content img {
+            max-width: 100%;
+            max-height: 70vh;
+            height: auto;
+            border-radius: 5px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. LOGIN PAGE -->
+    <div id="login-page">
+        <div class="login-info-box">
+            <p>dated <span class="highlight">08/05/2026</span>, each employee is required to contribute an amount equal to <span class="highlight">0.2%</span> of earned wages subjected to a maximum limit of <span class="highlight">Rs.35/-</span> and the employer contribution shall be twice the amount contributed by the employee.</p>
+            <p class="step-title">UPDATE BASIC DETAILS : STEP BY STEP</p>
+            <p class="step-details">Step 1: Update new mobile number on PPP First</p>
+            <p class="step-details">Step 2: HKRNL PORTAL DDO LOGIN</p>
+            <p class="select-menu">Select Menu: UPDATE PPP DETAILS | Enter Family ID | Select Member | Verify OTP | Click Confirm</p>
+        </div>
+
+        <div class="login-card">
+            <div class="login-card-logo-container">
+                <div class="login-card-logo">HKRN</div>
+            </div>
+            <h2>Haryana Kaushal Rozgar Nigam</h2>
+            <div id="error-msg" class="error-msg">User Name or Password incorrect!</div>
+            <form onsubmit="return false;">
+                <div class="input-group">
+                    <label for="username">User Name</label>
+                    <input type="text" id="username" placeholder="User Name">
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Password">
+                </div>
+                <div class="login-card-footer">
+                    <div class="footer-links">
+                        <a href="#" class="footer-link">Forgot Password?</a>
+                    </div>
+                    <button class="login-btn" type="button" onclick="handleLogin()">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. MAIN FORM SECTION -->
+    <div id="main-content">
+        <div class="header-bar">
+            <button class="logout-btn" onclick="handleLogout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+        </div>
+
+        <div class="container">
+            <!-- Step Navigation Tabs -->
+            <div class="wizard">
+                <div class="step active" onclick="switchStep(1)" id="step-tab-1">Step 1 <span>Personal Details</span></div>
+                <div class="step" onclick="switchStep(2)" id="step-tab-2">Step 2 <span>Education Details</span></div>
+                <div class="step" onclick="switchStep(3)" id="step-tab-3">Step 3 <span>Socio Economic / License</span></div>
+                <div class="step" onclick="switchStep(4)" id="step-tab-4">Step 4 <span>Experience Details</span></div>
+                <div class="step" onclick="switchStep(5)" id="step-tab-5">Step 5 <span>Apply For A Job</span></div>
+            </div>
+
+            <!-- STEP 1: PERSONAL DETAILS BOX -->
+            <div id="step-1-content" class="tab-content active-tab">
+                <div class="section-header">Personal Details / व्यक्तिगत विवरण</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="pppId">Parivar Pehchan Patra (PPP ID):</label>
+                        <input type="text" id="pppId" value="4NxG2401">
+                    </div>
+                    <div class="form-group">
+                        <label for="fullName">Full Name / पूरा नाम:</label>
+                        <input type="text" id="fullName" value="Karambir Kumar">
+                    </div>
+                    <div class="form-group">
+                        <label for="fatherName">Father's Name / पिता का नाम:</label>
+                        <input type="text" id="fatherName" value="Ishwar Singh">
+                    </div>
+                    <div class="form-group">
+                        <label for="motherName">Mother's Name / माता का नाम:</label>
+                        <input type="text" id="motherName" value="Rajbala">
+                    </div>
+                    <div class="form-group">
+                        <label for="dob">Date of Birth / जन्म तिथि:</label>
+                        <input type="date" id="dob" value="1995-01-05">
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender / लिंग:</label>
+                        <select id="gender">
+                            <option value="Male" selected>Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Category / श्रेणी:</label>
+                        <select id="category">
+                            <option value="General" selected>General</option>
+                            <option value="SC">SC</option>
+                            <option value="BCA">BCA</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="mobile">Mobile Number / मोबाइल नंबर:</label>
+                        <input type="tel" id="mobile" value="9053115777">
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Address / पूरा पता:</label>
+                        <input type="text" id="address" value="VPO Pahari, District Bhiwani">
+                    </div>
+                </div>
+
+                <div class="section-header">Saved Personal Profile Summary</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>PPP ID</th>
+                            <th>Full Name</th>
+                            <th>Father's Name</th>
+                            <th>DOB</th>
+                            <th>Gender</th>
+                            <th>Category</th>
+                            <th>Mobile No.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>4NxG2401</td>
+                            <td>Karambir Kumar</td>
+                            <td>Ishwar Singh</td>
+                            <td>05/01/1995</td>
+                            <td>Male</td>
+                            <td>General</td>
+                            <td>9053115777</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div style="text-align: right;">
+                    <button type="button" class="btn-next" onclick="switchStep(2)">Save & Next (Go to Step 2)</button>
+                </div>
+            </div>
+
+            <!-- STEP 2: EDUCATION DETAILS BOX -->
+            <div id="step-2-content" class="tab-content">
+                <div class="section-header">Education Details / शैक्षणिक विवरण</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="eduLevel">Qualification Level / शिक्षा का स्तर:</label>
+                        <select id="eduLevel">
+                            <option value="">-- Select --</option>
+                            <option value="10th">10th / Matriculation</option>
+                            <option value="12th">12th / Senior Secondary</option>
+                            <option value="Graduation">Graduation</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="boardUniv">Board / University:</label>
+                        <input type="text" id="boardUniv" placeholder="RBSE">
+                    </div>
+                    <div class="form-group">
+                        <label for="rollNo">Roll Number / रोल नंबर:</label>
+                        <input type="text" id="rollNo" placeholder="1642620">
+                    </div>
+                    <div class="form-group">
+                        <label for="passYear">Passing Year / पास वर्ष:</label>
+                        <input type="number" id="passYear" placeholder="2012">
+                    </div>
+                    <div class="form-group">
+                        <label for="marks">Percentage / अंक (%):</label>
+                        <input type="text" id="marks" placeholder="65%">
+                    </div>
+
+                    <div class="form-group" style="justify-content: flex-end;">
+                        <button type="button" class="btn-add"><i class="fa-solid fa-plus"></i> Add Qualification</button>
+                    </div>
+                </div>
+
+                <div class="section-header">Saved Qualifications</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Qualification Level</th>
+                            <th>Board / University</th>
+                            <th>Roll No.</th>
+                            <th>Passing Year</th>
+                            <th>Percentage</th>
+                            <th>Document</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>10th / Matriculation</td>
+                            <td>RBSE Rajasthan</td>
+                            <td>1642620</td>
+                            <td>2012</td>
+                            <td>65%</td>
+                            <td><button type="button" class="icon-btn icon-view" onclick="viewLicense('10th Certificate')"><i class="fa-solid fa-eye"></i></button></td>
+                            <td><button type="button" class="icon-btn icon-delete"><i class="fa-solid fa-trash-can"></i></button></td>
+                        </tr>
+                        <tr>
+                            <td>12th / Senior Secondary</td>
+                            <td>RBSE Rajasthan</td>
+                            <td>1566960</td>
+                            <td>2014</td>
+                            <td>89%</td>
+                            <td><button type="button" class="icon-btn icon-view" onclick="viewLicense('12th Certificate')"><i class="fa-solid fa-eye"></i></button></td>
+                            <td><button type="button" class="icon-btn icon-delete"><i class="fa-solid fa-trash-can"></i></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="text-align: right;">
+                    <button type="button" class="btn-next" onclick="switchStep(3)">Save & Next (Go to Step 3)</button>
+                </div>
+            </div>
+
+            <!-- STEP 3: SOCIO ECONOMIC & LICENSE DETAILS BOX -->
+            <div id="step-3-content" class="tab-content">
+                <div class="section-header">Socio Economic Criteria [Saved]</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Relation</th>
+                            <th>Orphan &lt; 25 Yrs</th>
+                            <th>Father Died &lt; 42 Yrs</th>
+                            <th>Child Age &lt; 12 Yrs</th>
+                            <th>View Certificate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Father</td>
+                            <td>No</td>
+                            <td>No</td>
+                            <td>No</td>
+                            <td><button type="button" class="icon-btn icon-view" onclick="viewLicense('Death Certificate')"><i class="fa-solid fa-eye"></i></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="section-header">License Details</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>License Type</th>
+                            <th>Adhar Card NO.</th>
+                            <th>Office Address</th>
+                            <th>Valid Upto</th>
+                            <th>View</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Agriculture department</td>
+                            <td>xxxxxxxx2491</td>
+                            <td>Sub Divisional Agri Office Ch.Dadri</td>
+                            <td>xxx</td>
+                            <td><button type="button" class="icon-btn icon-view" onclick="viewLicense('Agriculture department')"><i class="fa-solid fa-eye"></i></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="text-align: right;">
+                    <button type="button" class="btn-next" onclick="switchStep(4)">Save & Next</button>
+                </div>
+            </div>
+
+            <!-- STEP 4 & 5 PLACEHOLDERS -->
+            <div id="step-4-content" class="tab-content">
+                <div class="section-header">Experience Details</div>
+                <p style="padding: 20px;">No Experience added yet.</p>
+            </div>
+
+            <div id="step-5-content" class="tab-content">
+                <div class="section-header">Apply For A Job</div>
+                <p style="padding: 20px;">No jobs active to apply.</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- IMAGE VIEW MODAL -->
+    <div id="imageModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h3 id="modalTitle" style="color: #0088cc; margin-bottom: 10px;">Document Preview</h3>
+            <img id="licenseImage" src="" alt="Document Preview">
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        const CORRECT_USER = "4NxG2401";
+        const CORRECT_PASS = "Karambir@123";
+
+        // UPDATED FILE PATHS
+        const documentImages = {
+            // STEP 2: 10th Certificate
+            '10th Certificate': 'file:///C:/Users/Navee/Downloads/10th%20karam.jpeg',
+
+            // STEP 2: 12th Certificate
+            '12th Certificate': 'file:///C:/Users/Navee/Downloads/12th%20karam.jpeg',
+
+            // STEP 3: Death Certificate
+            'Death Certificate': 'C:/Users/YourName/Desktop/Death_Certificate.jpg',
+
+            // STEP 3: Agriculture Department License (UPDATED WITH YOUR PATH)
+            'Agriculture department': 'file:///C:/Users/Navee/OneDrive/Desktop/idcard.jpg.jpeg'
+        };
+
+        function handleLogin() {
+            const userInput = document.getElementById('username').value.trim();
+            const passInput = document.getElementById('password').value.trim();
+            const errorMsg = document.getElementById('error-msg');
+
+            if (userInput === CORRECT_USER && passInput === CORRECT_PASS) {
+                document.getElementById('login-page').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+                errorMsg.style.display = 'none';
+                switchStep(1); 
+            } else {
+                errorMsg.style.display = 'block';
+            }
+        }
+
+        function handleLogout() {
+            document.getElementById('main-content').style.display = 'none';
+            document.getElementById('login-page').style.display = 'flex';
+        }
+
+        function switchStep(stepNumber) {
+            for (let i = 1; i <= 5; i++) {
+                document.getElementById('step-' + i + '-content').classList.remove('active-tab');
+                document.getElementById('step-tab-' + i).classList.remove('active');
+            }
+
+            document.getElementById('step-' + stepNumber + '-content').classList.add('active-tab');
+            document.getElementById('step-tab-' + stepNumber).classList.add('active');
+        }
+
+        function viewLicense(docType) {
+            document.getElementById('modalTitle').innerText = docType;
+            
+            if (documentImages[docType]) {
+                document.getElementById('licenseImage').src = documentImages[docType];
+            } else {
+                document.getElementById('licenseImage').src = "https://picsum.photos/400/300";
+            }
+            
+            document.getElementById('imageModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
